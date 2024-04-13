@@ -3,7 +3,9 @@ package org.example.studentStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Test {
 
@@ -75,8 +77,28 @@ public class Test {
         collect.forEach((k,v)-> System.out.println("Dept-"+k+", avg-"+v));
 
         System.out.println("\n13- Find the highest rank in each department");
+        Map<String, Optional<Student>> map = list.stream()
+                .collect(Collectors.groupingBy(Student::getDepartmantName,
+                        Collectors.minBy(Comparator.comparing(Student::getRank))));
+        map.forEach((k,v)-> System.out.println("rank-"+k+", student-"+v));
+
+
         System.out.println("\n14- Find the list of students and sort them by their rank");
-        System.out.println("\n15- Find the student who has second rank");
+        List<Student> stuByRank = list.stream().sorted(Comparator.comparing(Student::getRank)).collect(Collectors.toList());
+        stuByRank.forEach(s-> System.out.println("rank-"+s.getRank()+", student-"+s));
+
+
+        System.out.println("\n15a- Find the student who has second rank");
+        Student rank2Stud = list.stream().sorted(Comparator.comparing(Student::getRank))
+                .skip(1)
+                .findFirst().get();
+        System.out.println(rank2Stud);
+
+        System.out.println("\n15b- Find the student who has second rank");
+        List<Student> rank2Stud1 = list.stream().sorted(Comparator.comparing(Student::getRank))
+                .skip(1)
+                .limit(1).collect(Collectors.toList());
+        System.out.println(rank2Stud1);
 
 
     }
